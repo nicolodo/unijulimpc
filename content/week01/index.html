@@ -1,0 +1,417 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb">
+
+<head>
+<meta name="style" content="cs" />
+<title>University of Bristol - Computer Science - COMS10008: Imperative Programming</title>
+<link rel="stylesheet" type="text/css" href="../corporate.css">
+<link rel="stylesheet" type="text/css" href="../uob.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/9.9.0/styles/xcode.min.css"/>
+<script src="https://cdn.jsdelivr.net/highlight.js/9.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/highlight.js/9.9.0/languages/cpp.min.js"></script>
+<script>
+  addEventListener('load', start);
+  function start() {
+    var pres = document.querySelectorAll("pre");
+    for (var i in pres) hljs.highlightBlock(pres[i]);
+  }
+</script>
+<style>
+  body { font-size: 120%; }
+  pre, .indent { margin-left: 40px; }
+  details[open] { background-color: #cfc; }
+  body { counter-reset: step; }
+  h2::before { counter-increment: step; content: "Step " counter(step) ": "; }
+</style>
+</head>
+<body bgcolor="#FFEEEE" style="margin:0; padding:30px;">
+
+<div align="center"><h1>COMS10008 Lab Week 01: Introduction</h1></div>
+
+<p>The lab task this week is formative, that is it will not count towards your credit for the unit. 
+However, it is essential for you to complete the tasks since they prepare you for later coursework that is worth credits.
+The main purpose of this lab is for you to make sure everything is set up properly for the unit, and that you write, compile and run your first tiny C programs.</p>
+
+<h2><u>Installations</u></h2>
+
+<p><b>TASK:</b> Get your computer set up and ready for the unit. If you don't want to sort your own computer out now, skip this step and carry
+on using the Linux lab workstations in MVB. Otherwise, there may be some installation work to do. 
+You will need to work within a Linux-enabled environment, which has the clang compiler, the SDL2.0 libraries, and a file editor correctly installed.
+We strongly recommend the use of the Atom editor, however, any editor of your choice will suffice if you do not need our support.</p> 
+
+<p><b>Windows:</b> If you work with Windows 10 (64bit Home or 64bit Professional) then go through the steps in 
+<a href="../windows.html" target="_blank">System Setup for Windows 10</a> to get your computer ready.</p>
+<p><b>Linux/MacOS:</b> If you work with Linux or MacOS you will need to make sure that the clang compiler, the Atom editor (or your editor of choice), 
+and the SDL2 libraries are installed properly.<br />
+Basic installation instructions for Ubuntu can be found at <a href="../unix.html" target="_blank">System Setup for Ubuntu Linux</a>.<br />
+Basic installation instructions for Mac can be found at <a href="../mac.html" target="_blank">System Setup for Mac OSX</a>.</p>
+
+<h2><u>Directory and Editor Setup</u></h2>
+
+<p><b>TASK:</b> Refresh your Linux/Unix/MacOS command line knowledge and set up a secure working directory for the lab.</p>
+<p><b>Open a Terminal:</b> If you work with lab workstations in the MVB Lab, right-click on the desktop and select "Open in Terminal" to open a command line terminal. 
+If you work with your own computer and have finished all above installations, then you will know how to open a Linux/Unix/MacOS terminal on your system. 
+Following your welcome week tutorial, we assume you can use basic Linux commands in this terminal. 
+A brief reminder of the most common commands can be found in the <a href="../COMS10008_Linux.pdf" target="_blank">Linux Command Overview</a>.</p>
+
+<p><b>Create a Working Directory:</b> Navigate to your Linux home directory (or maybe to "<code>/mnt/c</code>" for the Linux sub-system in Windows accessing your local hard drive C). 
+There, create a new sub-directory called something like "<code>coms10008</code>", change into this directory and create a sub-directory called something like "<code>week01</code>".
+We will use this as our working directory for this lab. On lab workstations, check (and if needed set) the permissions for this directory so only you, the owner, can access it. 
+Make sure that from now on all your programming directories are accessible by you only...so nobody can copy the code you develop. 
+Check you can open Atom (or the editor of your choice), and that you can save edited files into the "<code>week01</code>" directory.</p>
+
+<h2><u>Running Hello World</u></h2>
+
+<p><b>TASK:</b> Make sure everything is set up properly, by copying, editing, compiling and running the <a href="../hello.c" target="_blank">hello.c</a> program (which is the same as in the <a href="../COMS10008_2019_01.pdf" target="_blank">lecture notes (L1,Slide23)</a>).</p>
+
+<ol type="a">
+
+<li><p>Open your editor, copy-paste the <a href="../hello.c" target="_blank">hello.c</a> contents into an empty file, and save it into the newly created "<code>week01</code>" directory.</p></li>
+
+<li><p>Change into the "<code>week01</code>" directory and compile the program using the C compiler <code>clang</code> with basic parameters by typing the command:</p>
+
+<pre>clang -std=c11 -Wall hello.c -o hello
+</pre>
+
+<p><strong>Warning:</strong> Typing <code>clang ... -o hello.c</code> by mistake tells
+the compiler to put the compiled program in <code>hello.c</code> instead of a different file. After that, your source program has been destroyed and can't
+be recovered.</p>
+
+</li>
+<li><p>Run the program by typing the command:</p>
+
+<pre>./hello
+</pre>
+
+</li>
+<li><p>Edit the file <code>hello.c</code> so that it prints something else
+out (keep it clean!), and save the file (you can use "Ctrl + s" in Atom).</p></li>
+
+<li><p>Recompile the program - use the up arrow key to find the command you used before,
+then press enter to execute it, so that you don't have to retype it.</p></li>
+
+<li><p>Run the program again, and check that it prints out your new message.</p></li>
+
+<li><p></p><p>Download the associated <a href="../Makefile" target="_blank">Makefile</a> (renaming it back to
+<code>Makefile</code> if it gets downloaded as <code>Makefile.exe</code>) and place it in your "<code>week01</code>" directory.</p></li>
+
+<li><p>Compile the program properly with extended features by typing the following
+command inside the "<code>week01</code>" directory:</p>
+<pre>make
+</pre>
+</li>
+</ol>
+
+<h2><u>Investigating <code>make</code></u></h2>
+
+<p>As a next step, explore how the <code>make</code> program works by reading about the <a href="../COMS10008_Make.pdf" target="_blank">Make Basics</a>. Try out some of the
+examples given, and have a look at the multi-OS <a href="../Makefile" target="_blank">Makefile</a> you just executed in the previous step. 
+As suggested in this file, for Linux-enabled systems (including the Linux sub-system for Windows) always trigger compilation of programs with the following set of parameters from now on:
+<pre>clang -std=c11 -Wall -pedantic -g hello.c -o hello -fsanitize=undefined -fsanitize=address</pre>
+This will allow you to see all warnings about the code compilation and enable some helpful debugging features. 
+Any code you submit as coursework later should compile using these parameters and produce no warnings or errors. 
+After having familiarised yourself with the basics of <code>make</code>, decide now how you are going to issue compile commands in future. 
+Try to compile and run some other programs discussed in the lectures, for instance <a href="../fullpaint.c" target="_blank">fullpaint.c</a>. 
+</p>
+
+<h2><u>Writing a Squaring Program</u></h2>
+
+<p><b>TASK:</b> Write a program <code>square.c</code> containing a function
+<code>square</code> which squares an integer, and a function <code>main</code>
+which finds and prints the square of <code>42</code>. Then extend the program so it can find and print the square of integers entered by the user.</p>
+
+<ol>
+<li><p>Find the <a href="../hello.c" target="_blank">hello.c</a> program from before, make a copy in a file called <code>square.c</code>, and use it as a starting point.</p></li>
+
+<li><p>Open the file in your editor and add a function <code>square</code>. Your program should have the following structure:</p>
+<pre>/* Demo: a squaring function. */
+#include &lt;stdio.h>
+
+... square(...) {
+    ...
+}
+
+int main() {
+    ...
+}
+</pre>
+<p>All you have to do is fill in the ... parts. Note that the use of <code>void</code> for indicating that a function takes no parameters (like <code>main</code>) is optional.
+Let's try sorting out the <code>main</code> function first.</p>
+</li>
+
+<li><p>Remember from the lectures how to declare variables and assign values to them. 
+Thus, in our <code>main</code> function we could declare a local <code>int</code> variable, say <code>n</code>, and assign the value <code>42</code>. 
+Once this is done, remember from the lectures how to print values and how to call a function. 
+Change the <code>main</code> function so that it prints our value <code>42</code> and the result of the function call <code>square(42)</code>.
+After implementing these steps, your <code>main</code> function should look something like this:</p>
+<pre>/* Demo: a squaring function. */
+#include &lt;stdio.h>
+
+... square(...) {
+    ...
+}
+
+int main() {
+  int n = 42;
+  printf("%d squared is %d\n", n, square(n));
+  return 0;
+}
+</pre>
+<p>Remember that <code>%d</code> is the conversion specifier for <code>int</code>, and that statements must end with a semicolon.</p></li>
+
+<li><p>Next, we would like to implement the <code>square</code> function. Remember from the <a href="../COMS10008_2019_01.pdf" target="_blank">lecture notes (L1,Slide13)</a>
+how to write the signature of a function that maps from <code>int</code> to <code>int</code>. Also remember that multiplication between two integers is implemented using the <code>*</code> operator. 
+Putting all this together will give you the complete program:</p>
+<pre>/* Demo: a squaring function. */
+#include &lt;stdio.h>
+
+int square(int n) {
+  return n * n;
+}
+
+int main() {
+  int n = 42;
+  printf("%d squared is %d\n", n, square(n));
+  return 0;
+}
+</pre>
+<p>Save, compile and run your program to check it works fine. Don't worry if you didn't manage some steps without looking at the answer.</p>
+</li>
+
+<li><p>Finally, to make a more general squaring program, remember how to read inputs from the user as in our <a href="../fullpaint.c" target="_blank">fullpaint.c</a> program from the lectures. 
+Edit the <code>main</code> function so that our local variable <code>n</code> is not assigned <code>42</code>, but an integer input by the user.
+After doing this, your final source code should look something like this:</p>
+<pre>/* Demo: a squaring function. */
+#include &lt;stdio.h>
+
+int square(int n) {
+  return n * n;
+}
+
+int main() {
+  int n;
+  printf("Enter an integer:\n");
+  scanf("%d", &n);
+  printf("%d squared is %d\n", n, square(n));
+  return 0;
+}
+</pre>
+<p>Again, save, compile and run your program to check it works fine.</p>
+</li>
+</ol>
+
+
+<h2><u>Making the Squaring Program go Wrong</u></h2>
+
+<p><b>TASK:</b> Recompile the program <code>square.c</code> with simple compiler options:
+
+<pre>clang -std=c11 -Wall square.c -o square
+</pre>
+ 
+Then run the program and use it to find the square of <code>50000</code>. It should be clear to you that it hasn't worked. Can you
+work out why?</p>
+
+<p>Squaring <code>50000</code> with the the program <code>square.c</code> gives a negative answer.  
+As you remember from the <a href="../COMS10008_2019_02.pdf" target="_blank">lecture notes (L2,Slide7)</a>, 
+that's because the <code>int</code> type has a limit to the numbers it can store, and <code>2500000000</code> goes
+beyond that limit. That's called an overflow.</p>
+
+<p>The C language, for efficiency, like almost all other languages, doesn't
+detect and report overflows, it just accepts whatever the processor produces
+(it uses signed modulo arithmetic, usually modulo <code>2<sup>32</sup></code> for <code>int</code>). 
+To showcase the advantage of compilation with advanced options, recompile the program <code>square.c</code> 
+with the following options and then run it so that the overflow will be detected and execution will be stopped:</p>
+<pre>clang -std=c11 -Wall -pedantic -g square.c -o square -fsanitize=undefined -fsanitize=address</pre>
+<pre>./square</pre>
+
+<h2><u>Writing a Program of Interest</u></h2>
+
+<p><b>TASK:</b> Write a program <code>interest.c</code> which uses the <code>double</code>
+type to calculate interest on savings. It contains a function <code>add</code>
+which takes an amount of money, and a percentage rate of interest, and works out
+the total after adding the interest. And it has a function <code>main</code>
+which finds the total after adding <code>2.7</code> percent interest to
+<code>1000.0</code> pounds. Then extend the program so it can calculate interest based on an amount of monay and an interest rate entered by the user.</p>
+
+<ol>
+<li><p>Your program should look something like this:</p>
+<pre>/* Calculate interest. */
+#include &lt;stdio.h>
+
+double add(double amount, double interestRate) {
+    ...
+}
+
+int main() {
+    double a = 1000.0, i = 2.7;
+    double total = add(a, i);
+    printf("Adding %lf%% interest to %lf gives %lf\n", i, a, total);
+    return 0;
+}
+</pre>
+<p>In a <code>printf</code> call, <code>%%</code> prints out a percent character.</p>
+</li>
+
+<li><p>Your add function should look something like this:</p>
+<pre>double add(double amount, double interestRate) {
+    amount = amount + amount * interestRate / 100.0;
+    return amount;
+}
+</pre>
+<p>After you have finished the two procedures of your program, save, compile and run your program to check it works fine.</p>
+</li>
+
+<li><p>Finally, remember how to read inputs of type <code>double</code> from the user as in our <a href="../doublepaint.c" target="_blank">doublepaint.c</a> program from the lectures. 
+Edit the <code>main</code> function so that our local variables are assigned to values entered by the user. After doing this, your final source code should look something like this:</p>
+<pre>/* Calculate interest. */
+#include &lt;stdio.h>
+
+double add(double amount, double interestRate) {
+    amount = amount + amount * interestRate / 100.0;
+    return amount;
+}
+
+int main() {
+    double a, i;
+    printf("Enter saved amount:\n");
+    scanf("%lf", &a); 
+    printf("Enter interest rate:\n");
+    scanf("%lf", &i); 
+    double total = add(a, i);
+    printf("Adding %lf%% interest to %lf gives %lf\n", i, a, total);
+    return 0;
+}
+</pre>
+<p>Again, save, compile and run your program to check it works fine.</p> <p>We have learned in the lectures that the type <code>double</code> that we have used in our program has a huge range of 
+floating point values (up to more than 10<sup>308</sup>) it can approximate in double precision, whilst we have seen that the square of 50000 already causes <code>int</code> to overflow. 
+So we really need to take care when using the <code>int</code> type and should ask the question: what is the largest integer that <code>int</code> can represent?</p>
+</li></ol>
+
+<h2><u>Finding the Largest <code>int</code></u></h2>
+
+<p><b>TASK:</b> Find the exact limit of the <code>int</code> type in the C language. Specifically,
+find the largest number which can be correctly stored in a variable of that type. Start with this program:</p>
+
+<pre>/* Find the limits of the int type */
+#include &lt;stdio.h&gt;
+
+int main() {
+  int n = 42;
+  printf("%d\n", n);
+  return 0;
+}
+</pre>
+
+<p><b>Plan A:</b> Increase the constant in the program from <code>42</code>
+to <code>43</code>, recompile, and rerun, checking that the number gets printed
+out properly.  Repeatedly increase the number by one until the number isn't
+printed properly because of overflow.  When you get bored with this approach, switch to Plan B.</p>
+
+<p><b>Plan B:</b> Use manual interval halving. First guess a giant number which
+isn't printed out properly, e.g. <code>2500000000</code>, so you have a range within which the answer must
+lie. Then repeatedly try the above program with <code>n</code> set to a number
+half way through the range, so as to reduce the size of the range by a half and
+home in on the answer.  This is very tedious, but feasible (it is likely
+to take around 30 steps). When you get bored with this approach, switch to Plan C.</p>
+
+<p><b>Plan C:</b> We clearly want the computer to do the interval halving for us, so let's write a recursive program that does just this! 
+First, remind youself of some example programs where recursion is used in the <a href="../COMS10008_2019_02.pdf" target="_blank">lecture notes (L2,Slide31+Slide37)</a>: for instance
+recap, compile and run <a href="../trianglenum.c" target="_blank">trianglenum.c</a> and <a href="../hailstone.c" target="_blank">hailstone.c</a>.</p>
+
+<p>For our interval halving program, we need to keep track of two variables that represent the current range, and recursively halve this interval and try if the number in the middle of the interval is indeed the maximum <code>int</code>. 
+Let a function called <code>largestInt</code> do this job and let it return the maximum <code>int</code> for us. Thus, our program could have the following structure:</p>
+<pre>/* Find the limits of the int type */
+#include &lt;stdio.h&gt;
+
+int largestInt(..., ...) {
+  ...
+}
+
+int main() {
+  int n = largestInt(0,2500000000);
+  printf("The largest int is %d\n", n);
+  return 0;
+}
+</pre>
+
+<p>Critically, when handing the interval to this function as two parameters, the higher limit will be larger than the maximum <code>int</code>. 
+Luckily, as we remember from the <a href="../COMS10008_2019_02.pdf" target="_blank">lecture notes (L2,Slide7)</a>, the type 
+<code>long</code> (abbreviation for <code>long int</code>) stores integers significantly bigger than <code>int</code>. 
+Thus, our <code>largestInt</code> procedure could have the following structure:</p>
+<pre>int largestInt(int low, long high) {
+  long mid = low + (high - low) / 2;
+  ...
+}
+</pre>
+
+<p>Next, we need to find a way to check whether our number <code>mid</code> held in a <code>long</code> variable is beyond the <code>int</code> range or not.
+If we put a <code>long</code> number <code>mid</code> into an <code>int</code> variable, say one called <code>test</code>, then the two numbers <code>mid</code> 
+and <code>test</code> are equal only if the number <code>mid</code> is within the <code>int</code> range, otherwise the number <code>test</code> will overflow. Thus, our function could go on like this:</p>
+<pre>int largestInt(int low, long high) {
+  long mid = low + (high - low) / 2;
+  int test = mid;
+  if (test == mid) ...
+  else ...
+  ...
+}
+</pre>
+<p>If <code>(test == mid)</code> is true, then <code>mid</code> is indeed within the <code>int</code> range and our maximum <code>int</code> must sit
+within the upper half of our current interval, otherwise in the lower half. 
+It will sit exactly at <code>mid</code> whenever the half interval we are left with is just one integer wide</code>.
+In case we have found our answer we should return it (that is <code>test</code>) straight away, otherwise we should return the answer that the <code>largestInt</code> function
+applied to half the interval gives. Thus, our complete program could look something like this (note the early return of the function):</p>
+<pre>/* Find the limits of the int type */
+#include &lt;stdio.h&gt;
+
+int largestInt(int low, long high) {
+  long mid = low + (high - low) / 2;
+  int test = mid;
+  if (test == mid) low = mid; 
+  else high = mid; 
+  if (high - low < 2) return test; 
+  return largestInt(low, high);
+}
+
+int main() {
+  int n = largestInt(0,2500000000);
+  printf("The largest int is %d\n", n);
+  return 0;
+}
+</pre>
+
+<p><b>Plan D:</b> As shown in the <a href="../COMS10008_2019_02.pdf" target="_blank">lecture notes (L2,Slide7)</a>, 
+there is of course an official way to find out what the largest <code>int</code> according to the C language standard is. 
+Let's find out the 'official' truth...! You can double check yourself by typing "<code>C11 standard</code>" into Google and finding a PDF of the language standard.
+The standard says that if you include <code>limits.h</code>, it provides the constant <code>INT_MAX</code>. 
+Therefore, the simplest program to find out the maximum <code>int</code> is:</p>
+<pre>/* Find the largest int. */
+#include &lt;limits.h&gt;
+#include &lt;stdio.h&gt;
+
+int main() {
+    printf("The largest int is %d\n", INT_MAX);
+    return 0;
+}
+</pre>
+
+<p><b>The Truth:</b> We've only found the answer on our computer. Is it the same on every
+computer? No, because the standard says <code>int</code> is the most
+convenient or most efficient integer type on each computer. We happen to be in
+a fairly stable age at the moment where <code>int</code> is usually 32 bits, but it used to
+be 16 bits, and it may become 64 bits in the future. 
+The number printed out is <code>2147483647</code>, which is
+<code>2<sup>31</sup> - 1</code>.  This is because an <code>int</code> is stored in binary
+using 32 bits (4 bytes), and the first bit is used as a sign. Arithmetic using
+<code>int</code> is actually "signed modulo 2<sup>32</sup> arithmetic".</p>
+
+<h2><u>Lab's End</u></h2>
+<p>Only if you have time left after that, try to find the smallest (most negative) number that can be held in the <code>int</code> type, and do some
+investigations of some other basic types in C (<code>char</code>, <code>short</code>, <code>long</code>, <code>float</code>,
+<code>double</code>). As a sneak preview you can also check out the <a href="../COMS10008_Style.pdf" target="_blank">Programming Style Guide</a> and try to apply it to 
+all your further programming. There are some topics we have not discussed yet in the guide, so we will talk about it fully in the next lab. 
+The style guide will help you to write clean and more professional code. Finally, make sure you backup your source code regularly, since data loss or other IT issues are no valid reasons for missing a 
+coursework submission deadline coming up later in the unit. </p>
+
+</body>
+</html>

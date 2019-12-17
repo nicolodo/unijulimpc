@@ -1,0 +1,434 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb">
+
+<head>
+<meta name="style" content="cs" />
+<title>University of Bristol - Computer Science - COMS10008: Imperative Programming</title>
+<link rel="stylesheet" type="text/css" href="../corporate.css">
+<link rel="stylesheet" type="text/css" href="../uob.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/9.9.0/styles/xcode.min.css"/>
+<script src="https://cdn.jsdelivr.net/highlight.js/9.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/highlight.js/9.9.0/languages/cpp.min.js"></script>
+<script>
+  addEventListener('load', start);
+  function start() {
+    var pres = document.querySelectorAll("pre");
+    for (var i in pres) hljs.highlightBlock(pres[i]);
+  }
+</script>
+<style>
+  body { font-size: 120%; }
+  pre, .indent { margin-left: 40px; }
+  details[open] { background-color: #cfc; }
+  body { counter-reset: step; }
+  h2::before { counter-increment: step; content: "Step " counter(step) ": "; }
+</style>
+</head>
+<body bgcolor="#FFEEEE" style="margin:0; padding:30px;">
+
+<div align="center"><h1>COMS10008 Lab Week 10: Preparation</h1></div>
+
+<p>The main aims of this week's task are: 1) to practice I\O and file handling, 
+2) to make sure SDL2 graphics work on all your installations, 3) to understand modules and linking better,
+and 4) to get experience with the use of the display module and callbacks. The task is formative and does not count towards your unit mark. 
+Along the way, the task will allow you to inspect file contents in full detail and experience the wonderful world of fractals.</p>
+<div align="center"><img src="hellosdl.jpg"> <img src="hello.jpg"> <img src="emerald.jpg"> <img src="mandelbrot.jpg"></div>
+
+<h2><u>File Input and Output</u></h2>
+
+<p>The first aim is to be able to handle text files and binary files as it will be required for your final coursework starting next week. 
+It is recommended that you use the idiomatic code fragments and programs from the I/O lecture as a starting point for your programs - or you can explore what happens if you don't.
+Since it is difficult to automate the testing of I/O programs, it is recommended that you ignore unit testing for this week only and instead verify that
+your programs work correctly by manually inspecting the output files in comparison to the input files. (As soon as you start writing procedures with logic in them again, you must still auto test.)</p>
+
+<p><b>TASK: Upper Case.</b> Your first task is to write a simple program that reads a text file and writes the contents of it into another text file with all letters converted into upper case. 
+Write your program in a way so that it takes two filenames from the command line, one for input, and one for output. It reads a line of text at a time 
+from the input file, and writes it to the output file, with all letters converted to upper case. Don't forget to close the files after processing the file contents.
+Make sure that your program works in all three cases where the filenames may be local (e.g. in.txt), relative (e.g. data/in.txt), or absolute (e.g. /home/me/data/in.txt). 
+You shouldn't have to do anything special to detect and deal with these cases, just check that they all work.
+Your program should accept an input file with both Linux/Mac or Windows line endings, and write to the output file using the default line endings 
+for the platform the program is running on.</p>
+
+<p><b>TASK: Hex Viewer.</b> Your second task is to write a program that takes a filename (of any type of file opened as a binary file), reads bytes (as unsigned char) from it one at a time, 
+and prints the bytes on the standard output in hex, in the same format as the unix command "<code>od -t x1 filename</code>" would (but leaving out the address in the first column). 
+You may want to write another tiny program to write binary files with known content, which you can use to (manual) test your hex viewer.</p>
+
+<h2><u>Graphics Installation</u></h2>
+
+<p><b>TASK:</b> This step is to verify that your computer is set up and ready with the SDL2 graphics installation working for the last part of the unit 
+(or skip this step and use the Linux lab workstations in MVB2.11, which have everything set up for you). If you want to install graphics on your system, 
+follow the steps for your operating system below. If you experience any significant installation problems, as an alternative to the steps below or if your system is not compatible, 
+ install <a href="https://www.virtualbox.org" target="_blank">Virtual Box</a>, then create a Linux virtual machine and install Ubuntu by mounting the 
+installation DVD from its <a href="https://ubuntu.com/download/desktop" target="_blank">ISO file</a>, then follow the 
+<a href="../unix.html" target="_blank">System Setup for Ubuntu</a>.</p>
+
+<p><b>Windows:</b> If you work with Windows 10 (64bit Home or 64bit Professional) then go through the steps (starting with Step 6) in 
+<a href="../windows.html" target="_blank">System Setup for Windows 10</a> to get your computer graphics-ready.<br/>
+<b>Ubuntu:</b> If you work with Ubuntu Linux then go through the steps (starting with Step 3) in  
+<a href="../unix.html" target="_blank">System Setup for Ubuntu Linux</a> to get your computer graphics-ready.<br/>
+<b>Mac:</b> If you work with a Mac then go through the steps (starting with Step 3) in <a href="../mac.html" target="_blank">System Setup for Mac OSX</a> to get your computer graphics-ready.</p>
+
+<p><b>DOUBLE CHECK:</b> If you have not done this yet, you should finally verify that your graphics installation works fine via the following steps:
+<ol>
+<li>Download the program <a href="../hellosdl.c" target="_blank">hellosdl.c</a> to your current working directory 
+(or change directory in the Terminal to the location of the downloaded file).</li>
+<li>Compile and run the program:</li>
+<ul>
+<li>Use the following command to compile the program:<br />
+     <code>clang -std=c11 -Wall hellosdl.c -lSDL2 -o hellosdl</code><br />
+     <i>OR</i> if this fails with a clang 'ld' linker error, try compiling with static (not dynamic) libraries using this command:<br />
+     <code>clang -std=c11 -Wall `sdl2-config --static-libs` hellosdl.c -o hellosdl</code>
+<li>If the compilation was sucessful, you will see the new executable file <b>hellosdl</b> in the current directory.</li>
+<li>Run this program by typing: <code>./hellosdl</code></li>
+</ul>
+<li>If you see a sky blue 'HelloSDL' window appear then SDL2 is working properly.</li>
+</ol>
+</p>
+
+<h2><u>The Display Module</u></h2>
+<p>Next you will learn how to use the display module, which gives you simplified access to graphics. 
+This module will be used as part of your final coursework, so it is a good idea to understand how to use it correctly. 
+First download the source code of the module and its header file:
+</p>
+
+<p class="indent"><a href="../display.c">display.c</a><br/>
+<a href="../display.h">display.h</a></p>
+
+<p>Next, with both files residing in the local directory, lets compile the module into an object file using a 
+command such as:</p> <p class="indent"><code>clang -std=c11 -Wall -pedantic -c display.c -o display.o</code></p><p>Note that the <code>-c</code> flag 
+triggers compilation of the module without producing an executable file in the linking stage, instead an object file <code>display.o</code>
+should now exist in your local directory.</p>
+
+
+<p><b>MODULE USAGE:</b> The display module provides basic graphics support for drawing in one graphical window. 
+To demo the correct usage of the display module you should first create a program <code>hellodisplay.c</code>
+in the same folder where your header file <code>display.h</code> and your library object <code>display.o</code> reside.</p>
+
+<p><b>ENCAPSULATION AND API:</b> A user of the display module does not have to understand how the functions are implemented in <code>display.c</code>. 
+The idea of an encapsulated module or library (as discussed in the lectures) is to hide the complexity of the library and 'how' things 
+have been implemented from the user, and only expose 'what' can be done via the header file. The latter is called the library's API (Application Programming Interface). 
+The code of the header file and an already compiled object file without source code make up the module as handed to the user. 
+Thus, it will be sufficient for us to understand the available functions in <code>display.h</code> and the particular way in which the 
+library must be used - each library will have its own, fairly strict conventions. In your career as developers you will learn about
+many libraries, the display module is very simple.</p>
+ 
+<p><b>DISPLAY MODULE USAGE:</b> In our <code>hellodisplay.c</code> program we must first include the header file of the display 
+module and create a display window via <code>newDisplay(...)</code>. This function call takes the name of the window and the size of 
+the window (width and height of the drawable window area) as parameters. The last thing to be done in the program will be to free the 
+memory associated to the display window via the call <code>freeDisplay(...)</code>: </p> 
+<pre>
+#include "display.h"
+...
+int main() {
+  display *d = newDisplay("Hello Display", 320, 240); // create a window with 320x240 pixels
+  ...
+  freeDisplay(d); // free all display memory, close the display window
+}</pre>
+
+<p><b>CALLBACKS:</b> After creating a display window we have to call the 
+<code>run(...)</code> function of the display module, which takes the a pointer to the created display, a possible data pointer, and 
+most importantly a function pointer to a procedure which will be called by the display module repeatedly. This procedure will become our
+custom drawing function which can have any name, but must have a particular signature that is 
+<code>bool action(display*, void*, const char)</code>. The last argument represents the currently pressed key. 
+Once the <code>run(...)</code> function is called, it will repeatedly call back (see callback concept in lectures) our custom function,
+which should be very short. Importantly, the <code>run(...)</code> function will NOT return until the program is about to end. Effectively,
+calling the <code>run(...)</code> function hands over control to the display module - it will now call our functions instead of our 
+functions calling the library. All our function can do is indicate via the boolean return value whether it should be called again.
+Many libraries use this elegant callback concept in many forms. For programmers who just start up this concept is often difficult to 
+understand at first, so we recommend that you study this simple code example for <code>hellodisplay.c</code> and explore it a bit:</p>
+<pre>
+#include "display.h"
+#include &lt;stdio.h>
+#include &lt;stdbool.h>
+
+// Our function to be called repeatedly by the display module
+bool functionToBeCalledRepeatedly(display *d, void *data, const char pressedKey) {
+  printf("Our function has been called by the display module.\n");
+  return (pressedKey == 27); // indicate to stop once ESC is pressed
+}
+
+int main() {
+  display *d = newDisplay("Hello Display", 320, 240); // create a window with 320x240 pixels
+  run(d, NULL, functionToBeCalledRepeatedly); // hand control to the display module + ask to call back our function
+  freeDisplay(d); // free all display memory, close the display window
+}
+</pre>
+<p><b>COMPILATION AND RUNNING:</b> Lets compile and link the above program with the object file of the display module with a compiler command like:<br/> 
+<code>clang -std=c11 -Wall -pedantic display.o hellodisplay.c -lSDL2 -o hellodisplay</code><br/>
+You can close the window directly or via the ESC key. When you run the created program via <code>./hellodisplay</code> you will see that the function <code>functionToBeCalledRepeatedly(...)</code>
+is indeed called repeatedly, but without anything in our program calling it. It is the <code>run(...)</code> procedure in the display module that 
+performs this repeated calling:</p>
+<pre>
+...
+void run(display *d, void *data, bool action(display *, void*, const char)) {
+  bool quit = false;
+  ...  
+  while (!quit) {
+    quit = action(d, data, ...);
+    ...
+  }
+}
+</pre>
+<p><b>DRAWING THINGS:</b> Thus, our <code>functionToBeCalledRepeatedly(...)</code> procedure will run again and again. We can use this
+procedure to draw something into the window. We can for instance draw a blue box in our window by using three procedures from the display 
+module. Every procedure in the display API takes as first argument a pointer to the created display. The <code>colour(...)</code> function 
+changes the current 32bit RGBA drawing colour to a value of our choice, with one byte used for red, green, blue, and mask. Bright red 
+would be the hex value <code>0xFF0000FF</code>, and bright blue is <code>0x0000FFFF</code>. We can draw a block with the current drawing 
+colour via the function <code>block(...)</code>, and finally show what we have drawn (since drawing changes are buffered and not shown 
+before we ask for it) in the window via <code>show(...)</code>. Compile and run your program with this changed code:</p>
+<pre>
+...
+// Our function to be called repeatedly by the display module
+bool functionToBeCalledRepeatedly(display *d, void *data, const char pressedKey) {
+  colour(d, 0xFF); // set current colour to black
+  block(d, 0, 0, getWidth(d), getHeight(d)); // draw screen as black
+  colour(d, 0x0000FFFF); // set a custom colour
+  block(d, 80, 80, 160, 80); // draw a box with arguments (x,y,width,height)
+  show(d); // show drawn things in the window
+  return (pressedKey == 27); 
+}
+...
+</pre>
+<p><b>DRAWING CHANGING THINGS:</b> So far we have drawn a never changing blue box. However, our <code>functionToBeCalledRepeatedly(...)</code> 
+procedure is called again and again over time. So we could draw things that change depending on some changing state. Lets draw a box that changes 
+its colour over time. The display module allows us to hand a pointer to some state data as the second argument to the <code>run(...)</code> 
+function (which was unused and <code>NULL</code> so far), which will be forwarded by it to be the second argument of our 
+<code>functionToBeCalledRepeatedly(...)</code> procedure.
+This custom state data is handed over as a pointer of type <code>void*</code>, so that any data can potentially be handed over without
+changing the display module (we discussed the same concept in the lecture were we used <code>qsort</code>). 
+Lets create some state data representing colour, in our case just an <code>int</code> holding the 
+current colour state of the box to be drawn. After creating this state data we hand a pointer to it to the <code>run(...)</code> function, 
+which forwards the pointer to the <code>functionToBeCalledRepeatedly(...)</code> procedure. There we cast the data back to the pointer type
+ it was originally created as (in our case <code>int*</code>) so we can use it. Try to compile and run your code with the following changes,
+which will show the box changing its colour over time:</p>
+<pre>
+...
+bool functionToBeCalledRepeatedly(display *d, void *data, const char pressedKey) {
+  int *colourState = (int*)data; // cast data to what it was originally created as
+  colour(d, 0xFF); // set current colour to black
+  block(d, 0, 0, getWidth(d), getHeight(d)); // draw screen as black
+  colour(d, *colourState); // set colour according to colourState value
+  block(d, 80, 80, 160, 80);
+  show(d);  
+  *colourState += 0x400; // change colourState over time 
+  return (pressedKey == 27);
+}
+
+int main() {
+  display *d = newDisplay("Hello Display", 320, 240);
+  int colourState = 0x0000FFFF;
+  run(d, &colourState, functionToBeCalledRepeatedly); // hand a pointer to colourState to run(...)
+  freeDisplay(d);
+}
+</pre>
+<p><b>VARYING LOCATION:</b> So far we have drawn things without the user being able to influence the state. 
+However, our <code>functionToBeCalledRepeatedly(...)</code> has access to currently pressed keys. Lets use this access to implement a program
+where the user can move a box in our window using the arrow keys. Lets define the location (x,y) of our movable box as our state data using the 
+following user structure being declared, allocated, initialised and handed to the <code>run(...)</code> function as follows:</p>
+<pre>
+...
+typedef struct location {int x, y;} location;
+...
+int main() {
+  display *d = newDisplay("Hello Display", 320, 240);
+  location *l = malloc(sizeof(location));
+  *l = (location) {0, 0};
+  run(d, l, functionToCallRepeatedly);
+  free(l);
+  freeDisplay(d);
+}
+</pre>
+<p><b>INTERACTION:</b> We can now use this location state data in the <code>functionToBeCalledRepeatedly(...)</code> to draw our box, and
+even change the location state based on the currently pressed key. This leads to the following and final 
+<a href="hellodisplay.c" target="_blank">hellodisplay.c</a> program, which you should compile and run to check out how it works:</p>
+<pre>#include "display.h"
+#include &lt;stdio.h>
+#include &lt;stdbool.h>
+
+#define SCALE 16
+typedef struct location {int x, y;} location;
+
+bool functionToCallRepeatedly(display *d, void *data, const char pressedKey) {
+  location *l = (location*) data; // cast incoming data to be location*
+
+  colour(d, 0xFF); // set current colour to black to clear old box
+  block(d, 0, 0, getWidth(d), getHeight(d)); // draw screen as black
+
+  // change position state based on pressedKey input
+  switch (pressedKey) {
+    case 79: l->x += SCALE; break; // go right
+    case 80: l->x -= SCALE; break; // go left
+    case 81: l->y += SCALE; break; // go down
+    case 82: l->y -= SCALE; // go up
+  }
+
+  // limit position state to size of the display window (wrap-around)
+  *l = (location) { (l->x + getWidth(d)) % getWidth(d), (l->y + getHeight(d)) % getHeight(d)};
+
+  colour(d, 0xFFFF); // set current colour to blue
+  block(d, l->x, l->y, SCALE, SCALE); // draw a box at new position (l->x,l->y)
+  show(d); // show drawn stuff on the screen
+
+  return (pressedKey == 27);
+}
+
+int main() {
+  display *d = newDisplay("Hello Display", 320, 240);
+  location *l = malloc(sizeof(location));
+  *l = (location) {0, 0};
+  run(d, l, functionToCallRepeatedly);
+  free(l);
+  freeDisplay(d);
+}
+</pre>
+<p><b>FULL DISPLAY MODULE API:</b> Note that in your <code>functionToBeCalledRepeatedly(...)</code> procedure you should draw the entire frame anew every time the function is called 
+(e.g. set entire screen to black and then draw the block) 
+and then finally call the <code>show(...)</code> procedure. This will make sure the display module is used as intended and performs correctly on all devices. 
+Looking at the header file of the display module we can finally get a complete overview of the drawing functions provided,
+which basically allow us to draw pixels, lines or blocks in any custom colour in a single display window:</p>
+<pre>// Returns a pointer to a display object representing a single plain black window of a given size.
+display *newDisplay(char *title, int width, int height);
+
+// Free all memory allocated by the display and shut down.
+void freeDisplay(display *d);
+
+// Returns the width of the display object in pixels.
+int getWidth(display *d);
+
+// Returns the height of the display object in pixels.
+int getHeight(display *d);
+
+// Make all recent changes appear on screen.
+void show(display *d);
+
+// Draw a line from (x0,y0) to (x1,y1) with current drawing colour. (must call show to make it appear)
+void line(display *d, int x0, int y0, int x1, int y1);
+
+// Draw a filled rectangle at (x,y) of size (w,h) with current drawing colour. (must call show to make it appear)
+void block(display *d, int x, int y, int w, int h);
+
+// Draw a single pixel at (x,y) with current drawing colour. (must call show to make it appear)
+void pixel(display *d, int x, int y);
+
+// Change the current drawing colour to rgba. Colour is represented as a packed int,
+// where red, green, blue, and opp have unsigned single byte values packed into the int
+// from the most to the least significant byte. (Default is white)
+void colour(display *d, int rgba);
+
+// Runs the (drawing) function action repeatedly until the display is closed or action returns true.
+// The function action is provided with a pointer to the display, a pointer to the data,
+// and a char representing the currently pressed key on the keyboard.
+void run(display *d, void *data, bool action(display*, void*, const char));
+</pre>
+
+<h2><u>LETS GO FRACTAL (OPTIONAL)</u></h2>
+<p><b>THE MANDELBROT SET:</b> From here on things are optional if you have time left. Lets use our skills with the display module to draw something more interesting than boxes - lets visualise a fractal.
+A fractal is a self-similar object - when you look at it close up it looks similar compared to when you look at it from further away. Nature provides many examples 
+of fractals. For instance, a cauliflower has a fractal structure - each part is similar to other parts at different scales.
+One famous fractal is the so-called Mandelbrot Set - it is a connected mathematical object that resides in the (complex) plane. For this exercise it is not important to understand the
+Mandelbrot Set. However, if you are interested research a bit about it yourself. In general, we consider a location v = (x,y) in the plane 
+to be part of the Mandelbrot Set if the function f_v(z) = z * z + v does not diverge when iterated again and again starting with z = (0,0). We approximate this general principle only and demand that the value of 
+f_v(f_v(...f_v(z))) stays smaller than some threshold throughout a fixed number (=ACC) of iterations.</p>
+ 
+<p><b>LAYOUT:</b> Our aim is to visualise the Mandelbrot Set at different locations (x,y) and at different zoom-in levels (s). Thus, our state data that we need to keep 
+track of has three components <code>double s, x, y;</code>, lets call this data type <code>params</code>. Overall, our program <a href="fractal.c" target="_blank">fractal.c</a> 
+could thus have the following layout:
+<pre>#include "display.h"
+...
+typedef struct params {double s, x, y;} params;
+...
+void *newFractalState() {
+  params *p = malloc(sizeof(params));
+  *p = ...
+  return (void*)p;
+}
+...
+void freeFractalState(void *data) {...}
+...
+bool navigateMandelbrot(display *d, void *data, const char pressedKey) {...}
+...
+int main() {
+  display *d = newDisplay("Mandelbrot Flight", 256, 256);
+  void *data = newFractalState();
+  run(d, data, navigateMandelbrot);
+  freeFractalState(data);
+  freeDisplay(d);
+  return 0;
+}
+</pre>
+
+<p><b>DRAWING FUNCTION:</b> Our drawing function <code>navigateMandelbrot(...)</code> should first cast the state data back to the type <code>params*</code> so it can be used.
+Then it should go through the grid of sample pixels of the display window and draw the area of the pixel as black if it is part of the Mandelbrot Set, 
+or otherwise draw it in some other blue-ish colour. Finally, it should show the drawn content in the window and change the state data according to the pressed keys:</p> 
+<pre>  ...
+  #define STEPS 2
+  ...
+  int calculateMandelbrot(...) {...} // check if pixel is part of the Mandelbrot Set
+  ...
+  bool navigateMandelbrot(display *d, void *data, const char pressedKey) {
+  params *p = (params*) data; //casting generic data to params* type 
+  ...
+  //go through the pixels of the image with stride STEPS
+  for(int y = 0; y < h; y += STEPS) { ...
+    for(int x = 0; x < w; x += STEPS) { 
+      int i = calculateMandelbrot(ACC, x, y, w, h, p); // check a particular pixel
+      if (i == ACC) { ... //if pixel is part of the Mandelbrot Set then set black colour
+        colour(d, 0xFF); ...
+      } else { ... //otherwise set colour blue-ish
+        colour(d, 0xFFFF * (1 + 16 * (i % 16))); ...
+      }
+      block(d, x, y, STEPS, STEPS); //draw box at current pixel and stride size
+    }
+  }
+  show(d); //show everything drawn on the display window
+  ...
+  //use pressedKey input and/or interesting target to update the state 
+  ...
+  return (pressedKey == 27);
+} ...
+</pre>
+
+<p><b>FLY THROUGH NAVIGATION:</b> The state changes that simulate the flight through the set are goverened by the idea that by default a continuous zoom-in should 
+be performed by multiplying the current scale factor (p->s) of the state by a constant <code>ZOOM</code> factor. However, in order to always stay in 
+interesting areas of the fractal, the system keeps track of the border of the Mandelbrot Set, which is possible since the Mandelbrot Set is proven to be continuous. 
+An interesting pixel is, say, one that is inside the Mandelbrot Set, but whose left-side neighbour (last) is not. The pixel of this type which is closest to a 
+particular fixed target location (tx, ty) is found during drawing and stored in a variable c. During final zoom-in and update of the state the current 
+position (p->x,p->y) is shifted so that the interesting pixel is located exactly at the target location. Apart from the processing of pressed keys this leads to:</p>
+<pre>bool navigateMandelbrot(display *d, void *data, const char pressedKey) {
+  params *p = (params*) data; ...
+  int w = getWidth(d), h = getHeight(d), tx = w / 4, ty = h / 4; //image dimensions and target position
+  params c = (params) {DBL_MAX, 0.0, 0.0}; //buffer to store pick for interesting location
+
+  for(int y = 0; y < h; y += STEPS) {
+    bool last = false;
+    for(int x = 0; x < w; x += STEPS) {
+      int i = calculateMandelbrot(ACC, x, y, w, h, p);
+      if (i == ACC) {
+        if (!last) { 
+          int target = (x - tx) * (x - tx) + (y - ty) * (y - ty);
+          if (target < c.s) c = (params) {target, x - tx, y - ty}; // update interesting location
+        } ...
+        last = true;
+      } else { ...
+        last = false;
+      } ...
+    }
+  }
+  ...
+  //use interesting target to update the state p
+  *p = (params) {... p->s / ZOOM ... , ... p->x + p->s * c.x / w ... , ... p->y + p->s * c.y / h ...};
+  return (pressedKey == 27);
+}
+</pre>
+
+<p><b>COMPILATION AND RUNNING:</b> Lets compile and link this final <a href="fractal.c" target="_blank">fractal.c</a> program with the object file of 
+the display module with a compiler command like:<br/><code>clang -std=c11 -Wall -pedantic display.o fractal.c -lSDL2 -o fractal</code><br/>
+When you run the program you can use the ARROW KEYS to allow navigation, 'z' to speed up the zoom, 'x' to zoom out rather than in, and ESC to end the program. 
+Change some of the parameters, e.g. make the window larger to be 512x512 pixels, set the STEPS to 1, set the ACC to 128, and see how
+detailed the calculations can get (despite being significantly slowed down). Experiment a bit with this program to fully understand the use of the display module, state changes, colour encoding, and callbacks.
+After that you may want to try to turn the display module into a shared object usable as a system-wide library as discussed in the lectures.  
+Only if you have time left after that have another look at the <a href="../maze.zip" target="_blank">Emerald Maze Game</a> from the lecture and explore the different 
+modules it has. The use of the display module there should look easy by now...</p>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb">
+
+<head>
+<meta name="style" content="cs" />
+<title>University of Bristol - Computer Science - COMS10008: Imperative Programming</title>
+<link rel="stylesheet" type="text/css" href="../corporate.css">
+<link rel="stylesheet" type="text/css" href="../uob.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/9.9.0/styles/xcode.min.css"/>
+<script src="https://cdn.jsdelivr.net/highlight.js/9.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/highlight.js/9.9.0/languages/cpp.min.js"></script>
+<script>
+  addEventListener('load', start);
+  function start() {
+    var pres = document.querySelectorAll("pre");
+    for (var i in pres) hljs.highlightBlock(pres[i]);
+  }
+</script>
+<style>
+  body { font-size: 120%; }
+  pre, .indent { margin-left: 40px; }
+  details[open] { background-color: #cfc; }
+  body { counter-reset: step; }
+  h2::before { counter-increment: step; content: "Step " counter(step) ": "; }
+</style>
+</head>
+<body bgcolor="#FFEEEE" style="margin:0; padding:30px;">
+
+<div align="center"><h1>COMS10008 Lab Week 05: Strings</h1></div>
+
+<p>The formative lab task this week does not count towards your credit for the unit. The
+main purpose is to learn how to write functions which involve handling arrays and
+strings. Instead of open-ended work, there is an optional task about bit-packing this week.</p>
+
+<h2><u>Understand the Task</u></h2>
+
+<p>You are asked to write your own versions of some of the string functions in
+the standard library.  Each function should be implemented directly, without
+calling any library functions.  (The functions can call each other.) The
+declarations of the functions you are asked to write are:</p>
+
+<pre class="cpp">int length(const char s[]);
+void copy(char t[], const char s[]);
+int compare(const char s[], const char t[]);
+void append(char t[], const char s[]);
+int find(const char t[], const char s[]);
+</pre>
+
+<p>These are intended to be custom versions of <code>strlen</code>,
+<code>strcpy</code>, <code>strcmp</code>, <code>strcat</code> and
+<code>strstr</code>. The tests will provide the detailed specifications of the functions.</p>
+
+<h2><u>Study the Skeleton Program</u></h2>
+
+<p>You are given this skeleton program and Makefile as a starting point:</p>
+
+<p class="indent"><a href="strings.c">strings.c</a><br/>
+<a href="Makefile">Makefile</a></p>
+
+<p>Compile and run the code as usual via:</p>
+
+<pre>make
+./strings
+</pre>
+
+<p><b>Notation and Design.</b> Array notation is used rather than pointer notation.  You don't need to use
+any pointer notation in your answers, but you are allowed to within your own support functions.  It is traditional to use pointer
+notation in functions like this, but array notation is arguably superior,
+because it is more readable and can actually be more efficient nowadays, because
+the compiler with the <code>-O2</code> option has more information about what
+you mean so it can optimise better. The program doesn't do anything, except run tests on the functions.  
+This is what you would do if you were developing a library module.  The only additions
+for a real library module would be: (a) you would add a header
+<code>strings.h</code>, like the standard one for users to include, and (b) you
+would rename <code>main</code> to avoid a clash with a program that used your
+library. You will see that in detail in later assignments.</p>
+
+<p><b>Tests as Specification.</b> Read the tests to find the detailed specification of what each function has
+to achieve. Note that, for the <code>compare</code> function, you only need to
+return a negative, zero or positive number, not necessarily -1, 0, +1.
+Historically, that's for efficiency reasons because you would have to add an
+extra unnecessary step to normalise.  A couple of the original
+functions unnecessarily return the result string - the custom versions don't,
+because it is not possible using only array notation.  The <code>find</code>
+function returns an <code>int</code> position rather than a substring for the
+same reason.</p>
+
+<p><b>Simplified Types and Const.</b> For example, the return type of <code>length</code> is <code>int</code>,
+rather than <code>size_t</code>.  That means it won't work for super-long
+strings.  However, for a program which handles such strings, you would
+probably want to design a custom string type anyway. The use of the <code>const</code> keyword has advantages.
+It helps you to implement the functions, because the compiler
+will detect any mistaken attempt to change a string which you are not supposed
+to change.  Also, it helps the compiler to optimise the code.</p>
+
+<h2><u>Develop the Program</u></h2>
+
+<p>As usual, it is a case of working in small steps, one test at a time, keeping
+your program in a working state. The assignment is about writing loops, so please do not use library functions.  
+Obviously, calling <code>strlen</code> to make <code>length</code> easy isn't allowed.  
+The efficiency of your functions isn't tested.  But efficiency is tradionally a big concern 
+in writing reusable library functions. Don't agonize over efficiency, especially if it is at the expense of readability
+or correctness.  I suggest you just give a little thought
+to how many times each function loops through the relevant characters. If you
+are <em>fascinated</em> by efficiency, you could do timings, but that is definitely not
+required.</p>
+
+<p><b>Loops.</b> Suppose you write a loop <code>for (int i=0; i&lt;length(s); ...)...</code>.
+You might think that the function <code>length</code> is called each time round
+the loop.  Since <code>length</code> itself involves a loop, that would be
+inefficient.  But if <code>s</code> is declared <code>const</code> and you are
+using the <code>-O2</code> option to compile for instance, the compiler <em>will</em> notice
+that <code>length(s)</code> only needs to be called once. If you write <code>for (int i=0; i&lt;length(s); ...)...</code> then there
+are two loops through the characters, one in the length function, and the one
+you've just written.  You <em>may</em> be able to get away with one loop by
+writing <code>for (int i=0; s[i] != '\0'; ...)...</code>. If you write <code>for (int i=0;...)...</code> there may be one more thing
+you need to do, at the end of the string.  But the variable <code>i</code> is no
+longer available, because it is local to the loop.  If instead you write
+<code>int i; ... for (i=0;...)...</code> then <code>i</code> is available after
+the loop ends, and may have a useful value in it.</p>
+
+<p><b>Enjoy Programming!</b> Make sure your programming adheres to the <a href="../COMS10008_Style.pdf" target="_blank">Unit Programming Style Guide</a>.
+Enjoy programming, our lab team and the forum are there for you if you need help!</p>
+
+<h2><u>OPTIONAL: An Extra Task Packed full of Colour</u></h2>
+
+<p>Only if you have time left, there is an optional task on bit packing for this week instead of an open-ended task. 
+There is no submission, so explore the task as little or as much as you want to and can within the time limit given.
+This task comes with its own code and tests. The task is to write some functions which handle bit-packed data to get more experience on dealing with binary information:</p>
+
+<pre>unsigned int colour(int r, int g, int b, int a);
+void components(unsigned int c, int rgba[4]);
+unsigned int point(int x, int y, int z);
+void coordinates(unsigned int p, int xyz[3]);
+void binary(int n, char s[33]);
+void hex(int n, char s[9]);
+</pre>
+
+<p>The <code>colour</code> function packs four colour components (red, green,
+blue, 'alpha' = opacity) into a single unsigned integer.  The
+<code>components</code> function unpacks a colour into an array of its
+components.</p>
+
+<p>The <code>point</code> function packs three signed coordinates into a 3D
+position, held in an unsigned integer.  The <code>coordinates</code> function
+unpacks a position into an array of its three signed coordinates.  The
+coordinates are in the range <code>-512..511</code> so that they can be
+represented using ten bits each.</p>
+
+<p>The <code>binary</code> function converts the integer <code>n</code> into a
+binary string consisting of 32 digits, each <code>'0'</code> or
+<code>'1'</code>, in the array provided, which must be at least 33 characters
+long to allow for a null character at the end. The <code>hex</code> function
+similarly converts <code>n</code> into an 8-hex-digit string.</p>
+
+<p>Here's a skeleton program, to get you started and to
+provide the tests.</p>
+
+<p class="indent"><a href="bits.c">bits.c</a><br/>
+
+<p>The program can be used by typing <code>./bits</code> to run the tests. Printing a number in binary is solved by the two
+functions <code>binary</code> and <code>printBinary</code>. The first deals
+with the logic of the problem (converting a number into binary text) and the
+second deals with the input/output (printing the result text).  This allows the
+logic function to be tested easily, while keeping the I/O function simple so
+that it doesn't need to be tested. The <code>components</code>, <code>coordinates</code>, <code>binary</code>,
+and <code>hex</code> functions have an array passed to them for them to fill
+in the answer.  The functions would be prettier if they returned the answer, but
+arrays can't be returned from functions (without using pointer notation).  An
+alternative would be to define suitable structs to use instead of arrays, but
+the extra complexity doesn't seem worth it. The <code>testComponents</code> function is reasonably short and neat, with
+only one line per test.  To achieve that, an extra function
+<code>checkComponents</code> has been added.  The same applies to the other
+functions which take array arguments.  In general, you should use your normal
+programming skills to make testing functions short and neat, just as much as any
+other functions in your programs. In <code>checkComponents</code>, for example, the array passed to the
+<code>components</code> function is first filled with incorrect characters.
+Then, if the <code>components</code> function fails to fill in one of the
+characters, the test will detect that and fail (otherwise the random content
+might accidentally be correct, causing the test to succeed when it
+shouldn't). You are allowed to utilise code snippets you developed for the open-ended task of your first coursework, if this is helpful.</p>
+</body>
+</html>

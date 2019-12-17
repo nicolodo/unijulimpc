@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb">
+
+<head>
+<meta name="style" content="cs" />
+<title>University of Bristol - Computer Science - COMS10008: Imperative Programming</title>
+<link rel="stylesheet" type="text/css" href="../corporate.css">
+<link rel="stylesheet" type="text/css" href="../uob.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/9.9.0/styles/xcode.min.css"/>
+<script src="https://cdn.jsdelivr.net/highlight.js/9.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/highlight.js/9.9.0/languages/cpp.min.js"></script>
+<script>
+  addEventListener('load', start);
+  function start() {
+    var pres = document.querySelectorAll("pre");
+    for (var i in pres) hljs.highlightBlock(pres[i]);
+  }
+</script>
+<style>
+  body { font-size: 120%; }
+  pre, .indent { margin-left: 40px; }
+  details[open] { background-color: #cfc; }
+  body { counter-reset: step; }
+  h2::before { counter-increment: step; content: "Step " counter(step) ": "; }
+</style>
+</head>
+<body bgcolor="#FFEEEE" style="margin:0; padding:30px;">
+
+<div align="center"><h1>COMS10008 Lab Week 06: Text</h1></div>
+
+<p>The main purpose of this week's task is to practice pointers and memory
+management.  The task is formative and does not count towards your unit mark. The task may also provide you with some insight about how modules
+work, and about how strings are implemented in other languages.</p>
+
+<h2><u>Understand the Task</u></h2>
+
+<p>You are asked to write some functions which handle strings, wrapped as text
+objects to add pointer and memory management.  The functions you are asked to
+write are:</p>
+
+<pre class="cpp">text *newText(char *s);
+void freeText(text *t);
+int length(text *t);
+char get(text *t, int i);
+void set(text *t, int i, char c);
+text *copy(text *t);
+int compare(text *t1, text *t2);
+void append(text *t1, text *t2);
+text *slice(text *t, int i, int j);
+int find(text *t, text *p);
+</pre>
+
+<p>These functions form a potentially reusable library. The type
+<code>text</code> is a custom type set up for this assignment. It roughly
+matches how string types are implemented in some other languages. As usual, the tests
+will provide the detailed specifications of the functions.</p>
+
+<h2><u>Understand the Type <code>text</code></u></h2>
+
+<p>The text type is declared in <code>text.h</code> and defined in
+<code>text.c</code> as:</p>
+
+<pre>struct text {
+    int capacity;
+    char *content;
+};
+typedef struct text text;
+</pre>
+
+<p>The structure contains a dynamically allocated character array and its capacity.
+The capacity is the total size of the array, not the length of the string stored
+in it. The length of the string in it is determined by a terminating null
+character as usual, so <code>strlen</code> can be used to find it.</p>
+<p>The <code>typedef</code> statement defines the name
+<code>text</code> as an abbreviation for the full type name <code>struct
+text</code>. A variable declared as <code>text *t</code> involves two pointers.  The first
+is <code>t</code> itself, which points to a structure.  Its purpose is to allow
+the structure to be updated by the functions it is passed to, for example
+<code>set</code> doesn't have to return anything.</p>
+<p>The second pointer is <code>t->content</code> which points to the allocated array.  Its purpose is to allow
+the array to change size, without the structure having to move so, for example,
+<code>append</code> doesn't have to return anything.</p>
+
+<h2><u>Study the Skeleton</u></h2>
+
+<p>You are provided with three files.</p>
+
+<p class="indent"><a href="text.h">text.h</a><br/>
+<a href="text.c">text.c</a><br/>
+<a href="Makefile">Makefile</a></p>
+
+<p><b>Module Structure.</b> You are being asked to write a program in almost the same way as in previous
+assignments. The differences are that a header has been added, and that the test
+and <code>main</code> functions are included conditionally, so that the
+assignment roughly mimics a real library module. The program defines its test code between lines <code>#ifdef
+test_text</code> and <code>#endif</code>. That's called conditional
+compilation. The idea is that the variable <code>test_text</code> is defined when testing the module, and then
+the test and
+<code>main</code> functions are included. If the module were used in a
+bigger program, the variable would not be defined, and the test and
+<code>main</code> functions would
+be left out, to avoid unnecessary bulk and to avoid a name clash with the
+program's <code>main</code> function.</p> 
+<p><b>Upgraded Makefile and API.</b> The Makefile has been upgraded to support module testing.
+The compile command now includes the option <code>-Dtest_text</code>, which causes
+<code>test_text</code> to be defined as if with <code>#define</code>. You need
+to use this option, even if you don't use the Makefile. The header file <code>text.h</code> allows other programs to use the
+text module.  It is not important for this assignment, <em>except</em> that the
+<code>text.c</code> file includes it, to provide a
+cross-check that the declarations in the header file match the definitions.  So,
+you have to keep it in the same directory as <code>text.c</code> while you are
+working on the assignment, but you shouldn't change it. The header is included with the line <code>#include "text.h"</code>, which
+has double quotes instead of angle brackets to indicate that the header is
+included from the current directory, rather than the system header
+directory. You will notice that most of the comments are in <code>text.h</code> rather
+than <code>text.c</code>.  That's because a programmer using the module would
+be expected to read the header for documentation, and to have little interest
+in the implementation details. The declaration and the typedef are in <code>text.h</code>, and the
+definition is in <code>text.c</code>. The header forms the
+<a
+href="https://en.wikipedia.org/wiki/Application_programming_interface" target="_blank">API</a>
+for the module.</p>
+
+<p><b>Encapsulation and Access.</b> In the header file, the <code>text</code> structure is declared, but not
+defined.  That means a program that uses the text module cannot 'see inside'
+the text structure, so cannot access its fields, or even find out how
+big it is to allocate memory for it.  The program can <em>only</em> call
+the official functions provided in the header file. This is called encapsulation.  It makes sure that programs do not
+depend on any details of how the text module is implemented, allowing the
+text module to be developed independently, and changed without having to
+re-write any programs that use it.  It also allows the module to
+provide safety guarantees. Since a program can only use the functions provided, these have to cover
+everything.  In particular, <code>get</code> has to be provided as a
+replacement for <code>s[i]</code>, because the characters in the text
+cannot be accessed directly.  Similarly, <code>set</code> is provided
+to update the i'th character. The <code>get</code> and <code>set</code> functions can be made just as
+efficient as direct array indexing.  You aren't required to do that, but the
+best way would be to declare them as <code>extern inline</code> and add
+the <code>-flto</code> compiler option to do
+cross-module optimization.</p>
+
+<h2><u>Develop the Module</u></h2>
+
+<p><b>Allocation Policy.</b> Develop the module, function by function and test by test, as usual.
+Note that it is normal to allocate a small amount of memory initially, and then
+multiply by some factor where necessary. You are asked to allocate 24 bytes initially, and to multiply by 2 where
+necessary, so that the tests can check the capacity explicitly. Why 24? Because experiments show that the smallest memory block allocated by
+<code>malloc</code> has room for 24 bytes, so asking for less than that gains
+nothing. Why 2? Because it is the simplest choice, though something smaller such
+as 1.5 can sometimes work slightly better. When implementing <code>newText</code>, be careful in case the initialization
+string needs more than 24 bytes, not forgetting to include the null marker in
+the count. Also note that <code>newText</code> needs two calls to <code>malloc</code>. When you are implementing, you can use standard string
+functions.  For example, in the definition of <code>length</code> you can
+use <code>strlen</code>.  This assignment is not about rewriting the
+standard functions, it is about encapsulation and memory management.</p>
+
+<p><b>Safety First.</b> Your functions should ensure that the string in a <code>text</code> object
+<strong><i>always</i></strong> has a null character at the end, and
+<strong><i>always</i></strong> fits in its array.  Of course, such guarantees depend
+on all of the functions you provide being implemented completely correctly. 
+Ideally, the <code>get</code> and <code>set</code> functions should check
+that the index passed is within range.  You can do that with an assert.
+(Asserts can be switched off for production compiling, so that they have no
+effect on final efficiency.)</p>
+
+<p><b>Limited Testing.</b> Even with the advanced debugging options, it is impossible to test dynamic
+allocation perfectly. For example, some of the tests check the value of <code>t->capacity</code>,
+but they can't test that the value matches the amount you actually allocated in
+your call to <code>malloc</code>. And <code>freeText</code> can't be tested at
+all, other than via the <code>-fsanitize=address</code> option. As another example, it is impossible to test that the <code>get</code> and
+<code>set</code> functions check that their indexes are in range.</p>
+
+<h2><u>OPTIONAL: Open-ended Library Extensions</u></h2>
+
+<p><b>Your Text Library.</b> Only if you have time left, extend your library with further text functions of your choosing. 
+Examples of extensions could include the provision of functions for mirroring text backwards, checking for palindromes, 
+or faster than naive sub-string matching. Again, make sure you write unit tests for the functions you implement.
+</p>
+
+</body>
+</html>

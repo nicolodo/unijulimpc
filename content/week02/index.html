@@ -1,0 +1,279 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb">
+
+<head>
+<meta name="style" content="cs" />
+<title>University of Bristol - Computer Science - COMS10008: Imperative Programming</title>
+<link rel="stylesheet" type="text/css" href="../corporate.css">
+<link rel="stylesheet" type="text/css" href="../uob.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/9.9.0/styles/xcode.min.css"/>
+<script src="https://cdn.jsdelivr.net/highlight.js/9.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/highlight.js/9.9.0/languages/cpp.min.js"></script>
+<script>
+  addEventListener('load', start);
+  function start() {
+    var pres = document.querySelectorAll("pre");
+    for (var i in pres) hljs.highlightBlock(pres[i]);
+  }
+</script>
+<style>
+  body { font-size: 120%; }
+  pre, .indent { margin-left: 40px; }
+  details[open] { background-color: #cfc; }
+  body { counter-reset: step; }
+  h2::before { counter-increment: step; content: "Step " counter(step) ": "; }
+</style>
+</head>
+<body bgcolor="#FFEEEE" style="margin:0; padding:30px;">
+
+<div align="center"><h1>COMS10008 Lab Week 02: Grade</h1></div>
+
+<p>The lab task this week is formative again, it will not count towards your credit for the unit.  The
+main aims are to practice writing simple programs, and for you to get acquainted with the university marking scale. </p>
+
+<h2><u>University Marking</u></h2>
+
+<p>Formative work like this task prepares you for later assessment, it is essential to do this work properly, but it is not marked. 
+In contrast, when you do a summative coursework assignment or an exam, you get a mark for it. The
+mark is a number from 0 to 100.  It is often called a percentage, but it isn't a
+percentage <em>of</em> anything.  The mark is not on a linear scale.  The first
+few marks are easy to get, and higher marks are harder and harder to get. For more information
+how this unit is marked, see the <a href="../COMS10008_Marking.pdf">Marking Guidelines for COMS10008</a>.
+</p>
+
+<p>The marks from the various components of a unit are combined into a weighted
+average to form a unit mark. The marks for the units you take in a year are
+combined into an average, weighted by the number of credits each unit carries, to form a year
+mark. The year marks you gain over the course of your degree are combined into
+an average weighted by contribution (no contribution from the first year, and
+the highest contribution coming from the final year). The final mark is
+converted into a grade, with various borderline rules.</p>
+
+<h2><u>The Specification</u></h2>
+
+<p>Your task is to write a program in C called <code>grade.c</code> which takes
+in an integer percentage between 0 and 100 as a command line argument to the program, 
+representing the final average mark for a degree, and prints out the corresponding grade. The
+program prints <code>First</code> for first class (a mark of 70 or more),
+<code>Upper</code> <code>second</code> for upper second class (60 to 69),
+<code>Lower</code> <code>second</code> for lower second class (50 to 59),
+<code>Third</code> for third class (40 to 49), <code>Fail</code> (0 to 39), or
+<code>Invalid mark</code> if the input is not a valid mark. The program should
+ignore borderline issues, and other outcomes (ordinary degree, certificate,
+diploma, aegrotat, credit transfer). The program should use all the functions provided
+in the skeleton program and pass all provided tests.</p>
+
+<h2><u>Study the Skeleton Program</u></h2>
+
+<p>To help you get started, a skeleton program and Makefile have been provided
+for you to download or copy-paste. (If necessary, rename <code>Makefile.txt</code> back to <code>Makefile</code> after
+downloading):</p>
+
+<p class="indent"><a href="grade.c">grade.c</a><br/>
+<a href="Makefile">Makefile</a></p>
+
+<p><b>Improved Makefile</b>. If you type <code>make</code> on its own, this will compile
+<code>grade.c</code> to <code>grade</code> for Linux, Mac and the Linux sub-system for Windows 10 (or for Native Windows only <code>grade.exe</code>). 
+If you have any other program, in <code>program.c</code> for example, then you can type <code>make program</code> to compile it.</p>
+In the first line of a rule, <code>%</code> is a pattern matching any program
+name. In the other lines of a rule, <code>$@</code> stands for the characters
+matched by the pattern in the first line.</p>
+
+<p><b>Compile and Run the Skeleton Code</b>.Try compiling it and running the skeleton code either with minimum settings this:</p>
+<pre>$ clang -std=c11 -Wall grade.c -o grade
+$ ./grade 0
+Invalid mark
+</pre>
+<p>or better with full compiler options like this:</p>
+<pre>$ make
+$ ./grade 0
+Invalid mark
+</pre>
+<p>Compile using the <code>make</code> command to add the full set of options. The extra
+options help by providing more compile-time warnings, detecting run-time errors
+sooner, and allowing you to use a debugger. This may not be important yet, but
+it will be in later assignments. The program works already, <strong><i>but</i></strong> not correctly.  It prints out
+<code>Invalid mark</code> all the time. Your aim should be to improve it gradually.</p>
+
+<p><b>The Two Parts of the Program.</b> The program looks somewhat long, but that's mostly because of the functions which have been
+provided for you.  You won't have to write much yourself. The first part of the program is the part you are supposed to work on. The
+second part is user interface and testing functions which have been written for you, and which <strong><i>you should not change</i></strong>.</p>
+
+<p><b>Small Functions.</b>There is no function longer than about a dozen lines, and you won't need to
+write a function longer than that either.</p>
+
+<p><b>Enumerated Constants.</b>There are enumerated constant names <code>G1</code> etc. for the grades.
+These are integer codes.  Nothing in the program should depend on exactly what
+codes are used, and <b><i>you shouldn't change them</i></b>.  To see what they mean,
+look at the <code>print</code> function which prints them out.</p>
+
+<p><b>Self-Testing Programs.</b> For professional programs it is important that the functionality of the program is tested within the program itself (or alternatively a testing framework). This gives confidence
+to the programmer and others who edit/use the program later that it works correctly. One type of testing involves checking the correct workings of 
+small parts (such as functions) which is called 'unit testing'. Try running the skeleton program like this with no argument:</p>
+<pre>$ ./grade
+... assertion fails on line ...
+</pre>
+<p>This triggers the testing, and this is how you should most often run the
+program while working on it.  The exact error message you get
+depends on your compiler and programming environment, but it should include
+somewhere the line number in the program of the test which fails.
+The <code>main</code> function checks how many arguments you have
+typed in. If none, it calls the <code>test</code> function.  If one, it calls
+the <code>convert</code> and <code>grade</code> functions, and prints the
+result.</p>
+
+<p><b>Testing the Functions <code>grade</code> and <code>convert</code>.</b>
+The first few tests help you to develop the <code>grade</code> function.
+Then the remaining tests help you develop the <code>convert</code> function. 
+The tests use the <code>assert</code> function which takes a boolean argument.  If the
+argument is <code>true</code>, it does nothing, but if the argument is <code>false</code>, it
+crashes with an error message which includes the line number of the failed
+assertion. The tests for <code>grade</code> only check the boundary points.  It should
+be obvious what the <code>grade</code> function is expected to do on the
+numbers in between. Other functions such as <code>print</code> aren't tested, because it
+is difficult to test functions that do input or output.  You will have to trust
+them.</p>
+
+<p><b>Your own Support Functions.</b>You can probably write the <code>grade</code> function in one piece.  But the
+<code>convert</code> function may be too complex for that.  It is strongly
+suggested that you break it down into smaller functions. Suggestions might be to
+write a function <code>digit</code> which checks whether a character is a digit,
+and a separate function to check validity, or perhaps functions
+which separately handle the cases where the string is 1, 2 or 3 characters long.
+<b><i>Never</i></b> stuff too much code into one function, making it too
+big and unwieldy. You can do the assignment without library functions or loops (though you can
+use either if you want to).</p>
+
+<p><b>String Handling.</b> A mark string is passed to the <code>convert</code> function as an array of
+characters. The first argument <code>n</code> is the number of characters in the string.  It has been added so that you don't
+have to call any library functions if you don't want to. (Normally, <code>strlen</code> would be used.)
+For example, if <code>n</code> is <code>2</code> then the two characters are <code>mark[0]</code> and <code>mark[1]</code>. 
+The <code>const</code> keyword is included to help you, by making the compiler give an error message if you accidentally try to change the characters
+in the string.</p>
+
+<p><b>Common Sense.</b> If you look at the first three tests in <code>testValidity</code>, you might
+think you should check for decimal points, letters and negative numbers.  But if
+you read the comment, these are all just examples of input containing
+non-digits. So, what you should be checking is that every character <b><i>is</i></b> a
+digit. The autotests have several purposes.  They set a good example, provide a
+precise specification of some details of how the functions operate, provide some
+example snippets of code.</p> 
+
+<p><b>Check your Progress.</b> If this coursework was marked, then the first 50% of the mark would be given for passing the tests correctly.
+Passing all the tests would be worth the full 50%, and passing only some of them would be proportionally less. Everybody can aim for
+perfection on this half of the work. (We would of course use our own copy of the tests, to make sure you have not changed them or the program structure.)</p>
+
+<h2><u>A Professional Approach</u></h2>
+
+<p>However you are going to solve the task, you should follow some golden rules of software development:</p>
+
+<p><b>RULE #1: Take Small Steps.</b> That means: start with a working program.  That's why you are given a working
+skeleton. Then write or change only a couple of lines before re-compiling and
+re-running the program.  This is very efficient because you get the maximum
+amount of help from the computer and, if there is a problem, you know exactly
+where to look for it.</p>
+
+<p><b>RULE #2: Write Tiny Functions.</b> Divide a program into very small functions. The whole of a function should be
+visible at a glance in your editor, without scrolling. A function should be a
+bite-sized chunk of programming that you can tackle with confidence.
+The less confident you are, the smaller the functions should be.</p>
+
+<p><b>RULE #3: Automate Testing.</b> Don't repetitively and boringly keep trying out your program in different
+ways to see if it is working.  Build the testing into the program
+itself, re-running all the tests frequently to make sure you haven't broken
+anything. The tasks in this unit are designed to get you into the good habit 
+of doing this for your whole career.</p>
+
+<p>You may also want to have a look at the <a href="../COMS10008_Style.pdf" target="_blank">Unit Programming Style Guide</a> to write code that complies with the unit style, which is strongly 
+recommended for all coding in the unit. Remember, your task is to change the <code>grade</code> and <code>convert</code>
+functions, and any supporting functions you define, until the goal of the program is achieved and - as a side effect - all the tests pass.
+It is a good idea to concentrate on the first test that fails, get that to pass,
+incidentally checking that all the previous tests still pass.  Each extra test
+that passes represents good progress.</p>
+
+<h2><u>Writing the Program</u></h2>
+
+<p>To start with, you should get the <code>grade</code> function to pass its
+tests, one by one.  You need to use some common sense.  The tests say that
+<code>0</code> and <code>39</code> should give the answer <code>Fail</code>. You
+should make sure all the numbers in between also give the answer
+<code>Fail</code>, but <em>not</em> by dealing with them individually one by
+one. Once those tests pass, start on the <code>convert</code> function.  For
+validity, the number of characters in the array should be <code>1</code> or
+<code>2</code> or <code>3</code>. You can deal with each of the three cases
+separately if you want. Each character should be a digit, if there are two digits the first
+should not be zero, and if there are three digits, they should be exactly
+<code>'1'</code> and <code>'0'</code> and <code>'0'</code>.</p>
+
+<p><b>Design.</b> The hardest parts are probably those that check if a string is valid, and convert it
+into an integer. To check validity of a string, you can first check the length. It should be
+1, 2, or 3.  For each of these lengths, you can check the individual
+characters. You can convert the string to an integer in a similar way by dealing with the
+three cases separately. Alternatively, you can use more general validity checking or conversion of
+arbitrary integer strings, and/or you can use standard functions to do some of
+the work.
+
+<p><b>Characters and Digits.</b> The type for a character is <code>char</code>.  A character value is written
+using single quotes, e.g. <code>'5'</code> for the digit 5.  A character is
+really an integer code, e.g. <code>'A'</code> is just a synonym for
+<code>65</code>, but you shouldn't write functions which depend on knowing what
+the codes are. Suppose the user types in <code>./grade 56</code>.  Then the argument is
+first represented in the program as a piece of text <code>"56"</code>.  That is
+really an array containing the digits <code>'5'</code> and <code>'6'</code>. The
+digits are codes for the decimal symbols.  They are not yet numbers.  The code
+for the digit <code>'5'</code> is <strong>not</strong> the number
+<code>5</code>.  You are not supposed to write functions based on knowing
+what the code for <code>'5'</code> is.  However, you <strong><i>are</i></strong>
+allowed to use the fact that the codes for the digits are next to each other.
+So, if you have a <code>char</code> variable <code>ch</code> containing one of
+the ten digits, you can write <code>ch - '0'</code> to convert it into a
+number.</p>
+
+<p><b>Arrays.</b> The mark that the user types in is passed to the <code>convert</code> function
+in an array called <code>mark</code>.  This array <code>is</code> a string, such
+as <code>"56"</code>.  The number of characters in the string, e.g.
+<code>2</code> is passed in another argument <code>n</code>.  (The array is
+actually one character longer <code>{'5','6','\0'}</code> because a valid string
+always has a terminating marker character at the end, so that the length can be
+counted instead of being passed in, usually using the <code>strlen</code>
+function.) The digits can be extracted from the array using
+<code>mark[0]</code>, <code>mark[1]</code>..., but you should be careful not to
+access <code>mark[i]</code> unless you know that that the length of the
+array is at least <code>i + 1</code>, because that could access memory that
+doesn't belong to the program, causing it to crash with a segfault.</p>
+
+<p><b>String Operations via Library Functions.</b> The assignment is arranged so that you can do everything without calling any
+library functions, if you want.  This can be a useful exercise, to make sure you
+understand all the details. But if you are comfortable that you could handle
+the details if you needed to, and you want to take a shortcut by calling a
+library function, that's fine. The relevant headers (<code>stdlib.h</code>, <code>ctype.h</code>, ...) have been
+included in the skeleton program to make these functions available. 
+For instance, a call <code>atoi(mark)</code> converts a valid mark string into an
+integer. Type "C atoi" into Google to find documentation for the
+<code>atoi</code> ("ascii to int") function.  You may eventually need to
+find out what it does in unusual cases... A call <code>isdigit(ch)</code> checks whether a character is a digit.  It is
+equivalent to <code>(('0' &lt;= ch) &amp;&amp; (ch &lt;= '9'))</code>. You can temporarily add a call to the <code>printf</code> function, e.g.
+<code>printf("n=%d\n",n);</code> or <code>printf("m0=%c\n",mark[0]);</code> at
+any point to check the values of variables.  It is normal to do this when you
+are unsure what's happening, but don't forget to delete or comment out these
+calls once your program is working correctly. Enjoy programming, our lab team and the forum are there for you if you need help!
+Once you pass all the tests you have finished the closed part of the assignment.</p>
+
+<h2><u>Keep Writing Programs</u></h2>
+
+<p>If this was a summative coursework, then there would be an open-ended part of the assignment, for the other 50% of the
+marks. Never attempt it unless you have successfully completed the grade
+program, and you have time left. In general, you are not expected to spend more
+than 5 hours per week on assignments (partly in the lab session and partly on
+your own). You would gain marks towards the 50% of the open-ended task based on the knowledge, skill, style, creativity, and effort you show - 
+where we take a manual, brief look at what you have produced.</p>
+
+<p><b>A typical open-ended task could be...</b> Write another C program that either: 
+1) allows checking that a string is a valid new <a href="http://www.bristol.ac.uk/it-services/advice/iam/usernamesandpasswords.html" target="_blank">university username</a>,
+2) allows checking the strength of a password, or 3) allows playing a game of rock-paper-scissors against the computer.</p>
+
+<p>Thus, if you have time left try implementing some of these suggestions! Make sure your programming adheres to the <a href="../COMS10008_Style.pdf" target="_blank">Unit Programming Style Guide</a> and that you write your code as well as code that tests your program like in the first part of this task! 
+Enjoy programming, our lab team and the forum are there for you if you need help!</p>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb">
+
+<head>
+<meta name="style" content="cs" />
+<title>University of Bristol - Computer Science - COMS10008: Imperative Programming</title>
+<link rel="stylesheet" type="text/css" href="../corporate.css">
+<link rel="stylesheet" type="text/css" href="../uob.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/9.9.0/styles/xcode.min.css"/>
+<script src="https://cdn.jsdelivr.net/highlight.js/9.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/highlight.js/9.9.0/languages/cpp.min.js"></script>
+<script>
+  addEventListener('load', start);
+  function start() {
+    var pres = document.querySelectorAll("pre");
+    for (var i in pres) hljs.highlightBlock(pres[i]);
+  }
+</script>
+<style>
+  body { font-size: 120%; }
+  pre, .indent { margin-left: 40px; }
+  details[open] { background-color: #cfc; }
+  body { counter-reset: step; }
+  h2::before { counter-increment: step; content: "Step " counter(step) ": "; }
+</style>
+</head>
+<body bgcolor="#FFEEEE" style="margin:0; padding:30px;">
+
+<div align="center"><h1>COMS10008 Coursework 01: Triangle</h1></div>
+
+<p>The coursework the next two weeks counts for 30% of your credit for the unit. The
+main purpose is to continue to practice writing simple programs, and
+particularly to understand how to achieve precision. You have to work individually. The first half of the
+assignment is a closed task to write a triangle classifier, and the second half is an open
+ended task concerning the bit structure of data. All code you submit must be your own, do not copy any code parts from peers or other sources. The programs we use for checking against the web and your peers are advanced. (Plagiarism may result in 0 marks for the coursework, the entire unit or worse.)</p>
+
+<h2><u>Understand the Triangle Problem</u></h2>
+
+<p>You are asked to write a program which reads in three integers representing
+the lengths of the sides of a triangle, and then prints out the type of
+triangle. Using only standard libraries, if any, the program should take its input from the command line only, and print its output
+on the standard output, e.g.</p>
+
+<pre>./triangle 3 4 6
+Scalene
+</pre>
+
+<p>The possible responses are:</p>
+
+<pre>Equilateral     <em>(all sides equal)</em>
+Isosceles       <em>(two sides equal, but not flat)</em>
+Right           <em>(has a right angle)</em>
+Scalene         <em>(sides unequal, but no right angle and not flat)</em>
+Flat            <em>(lengths add up exactly, so no area)</em>
+Impossible      <em>(lengths do not add up)</em>
+Illegal         <em>(lengths are invalid)</em>
+</pre>
+
+<h2><u>Study the Skeleton Program</u></h2>
+
+<p>You are given this skeleton as a starting point:</p>
+
+<p class="indent"><a href="triangle.c">triangle.c</a><br/>
+<a href="Makefile">Makefile</a></p>
+
+<p><b>Compile and Run the Skeleton Program.</b> Try compiling and running the skeleton program like this:</p>
+<pre>$ clang -std=c11 -Wall triangle.c -o triangle
+$ ./triangle 5 5 5
+Equilateral
+$ ./triangle
+... assertion fails on line ...
+</pre>
+<p>or preferably like this:</p>
+<pre>$ make
+$ ./triangle 5 5 5
+Equilateral
+$ ./triangle
+... assertion fails on line ...
+</pre>
+<p>At the moment, if you run it with three integer arguments, the program prints
+out <code>Equilateral</code> all the time.
+If you run the program without arguments, it carries out the tests. That is what
+you should be doing most of the time while you are developing.
+At the moment, only the first couple of tests pass.</p>
+
+<p><b>Parts of the Program and Testing.</b> The skeleton seems long, because of all the tests.  There are lots of them,
+because there are surprisingly many quirky details, and because they are
+designed to catch most of the mistakes that any student is likely to make.  
+In a 'real' project, there would probably not be so many. The first part of the program is the part you are supposed to work on.
+That's the <code>convert</code> and <code>triangle</code> functions, and any
+supporting functions you choose to add.  The rest is the tests and user
+interface, which <strong><i>you are not allowed to change</i></strong>. The skeleton uses a custom
+version of the <code>assert</code> function. Note that a custom definition of
+<code>assert</code> has been used, and each call to <code>assert</code> has
+had an extra argument added to pass in the line number of the test. To solve the coursework task you are unlikely to need to 
+write more than about 20 or 30 lines of code.</p>
+</details>
+
+<p><b>The Functions of the Program.</b> The <code>triangle</code> function returns an integer constant
+representing the type of triangle.  Named constants are used rather than strings
+because (a) the compiler will tell you if you miss-spell them, (b) it separates
+the symbolic issue of classification from the textual issue of printing, e.g.
+making it easy to change to a language other than English, (c) it
+makes testing marginally easier, and (d) it avoids pointer notation, which would
+be needed if a string was returned. <strong><i>You are not allowed to change</i></strong> the <code>enum
+type</code>erated constants. Note that C doesn't allow you to define a 'safe'
+enumerated type for constants.  Any type name you use (e.g. <code>enum
+type</code>) is just a synonym for <code>int</code>. The skeleton provides two functions <code>convert</code> and
+<code>triangle</code> which will be tested. If either of those expands beyond a
+very few lines, it is strongly recommended that you define
+one or two support functions, e.g. a
+<code>valid</code> function for checking if a
+string length is valid, or a separate function to handle each type of
+triangle. That isn't necessary if you have a compact programming style, because
+each of the types can be checked in one line of code, but it may be a good
+idea if your style is more verbose.  Either way, your aim should be to keep each
+of your functions very short.</p>
+
+<p><b>Design Notes.</b> The <code>triangle</code> function needs to do various checks on the three integer lengths.  These have
+to work no matter what order the lengths are in.  You can either do several
+checks, or you can sort the lengths into order first (just by doing a couple of
+swaps, not necessarily using a full sorting algorithm).  The two approaches are
+about equally good. If you are careful about the order of the checks for
+the different types, that can make the checks much simpler. The <code>convert</code> function needs to check if a string is valid, and in range, and convert it into an
+integer. There are at least three approaches to validity chacking.  One is to do it
+yourself, with a loop, before conversion.  A second is
+to use a conversion function which provides enough extra information, beyond
+just the result, to help with validity checking. The third is to use a clever
+trick: convert the string to an integer using a simple conversion function, and
+then convert back to a string, and compare with the original string, catching
+all validity issues in one go. To check if the integer is in range, you could either do suitable checks on
+the string before conversion, or convert to an integer type bigger than
+<code>int</code> and check the range before putting it into an <code>int</code>
+variable.</p>
+
+<p><b>Implementation Notes.</b> To find the length of a string (if you need it) use <code>strlen</code>. To convert a string to an integer, you can either use a simple function
+like <code>atoi</code> or <code>atol</code>, or a more complex function
+like <code>strtol</code> if you want to get validity information from it. To convert an integer back to a string, use <code>sprintf</code>, and to
+compare two strings, use <code>strcmp</code>.  Type <code>C atoi</code> into
+Google, for example, to find the documentation for a function. To avoid a 'magic number' for the maximum allowable length, you can use
+<code>INT_MAX</code>, which is defined in <code>limits.h</code>. The last few tests are designed to catch overflow problems.  This is when
+integers exceed the limit of the <code>int</code> type.  You might consider
+switching to the <code>long</code> type in parts of the program where you think
+overflow might occur.  It is OK for this assignment to assume
+that <code>int</code>s have 32 bits and <code>long</code>s have 64 bits.</p>
+
+<p><b>Your Development.</b> When developing your program follow the design and style rules discussed in last weeks Grade assignment.
+Note that the tests of the skeleton program form an extended specification of the program, filling in the gaps in the
+quick description above, and illustrating all the nitty gritty details of what
+your program is supposed to do.  So you should study them carefully, especially
+the one that currently fails. The first thing to do is, for example, add a couple of lines to
+<code>triangle</code> to test for the isosceles case. There's a good chance the program won't compile immediately, but you
+<strong>must</strong> work at it, solving any problems, until it compiles and
+runs again, <strong>before</strong> trying to achieve more. The program should now pass at least one more test.</p>
+
+<p><b>The Tests are used for Marking.</b> The number of tests your program passes before failing is a rough measure of
+progress. Your program will be compiled and run for marking (using a clean copy of the tests) and the relative number of
+tests passed before it fails (where a mark of 50 is equal to all tests passing) will be your mark for the first half of the assignment.</p>
+</details>
+
+<p><b>Test-Driven Development.</b> The specific technique for this assignment is <a
+href="https://en.wikipedia.org/wiki/Test-driven_development"><strong>test
+driven development</strong></a>, and is a very powerful technique for confident
+development of robust programs.  Of course, you would normally have to design
+the program yourself so that it supports testing, and create your own tests.</p>
+
+
+<h2><u>The Open-ended Task</u></h2>
+
+<p>Only if you have time left, and if you are interested or you want more than 50% for the
+assignment, you can do some extra open-ended work in your own program called <code>visualise.c</code> on the following task:
+Using only standard libraries, if any, write a program that visualises the bit structure of one or some data types in C (e.g. <code>char</code>, 
+<code>double</code>, ...) entered in decimal form. 
+We recommend to keep things relatively simple at first, for instance, by starting with investigating just <code>char</code>. The knowledge you already gained in computer
+architecture may be handy. Most importantly for this unit, the program should contain detailed unit tests which are run if no command line parameters are provided.
+Otherwise, the program should take 1) a type, and 2) particular data of this type as command line arguments. 
+It should check for input errors, and if there are none, it should print information about the meaning of the bit structure of the data, e.g.:</p> 
+<pre>./visualise char 7
+1 sign bit: 0 (positive)
+7 binary digits: 0 0 0 0 1 1 1
+</pre>
+
+<p>Write the source file <code>visualise.c</code> which must compile error-free and warning-free for your submission, and write a summary file <code>readme.txt</code>
+which describes your aims for the program and how far you got with it in no more than 100 words. 
+There are no marks for report writing, but the summary may be necessary for us to make
+sense of the program. Even if your program is very basic (e.g. just checks that some input char is valid), still submit it. 
+Whenever you have reached a well working version, take a copy of your work, so you can revert back to it at any point. 
+You may need to do some research into interpreting the bit structure of floating point representations if you attempt to look into <code>double</code> etc. 
+You could extend your work further by allowing octal, binary, hex inputs etc. Be careful not to over spend on time, since the task is completely 
+open-ended and C data structures of any complexity could be investigated (e.g. <code>struct</code>s, ...), 
+so make sure you manage your 5h of time well and stop at an appropriate point. 
+Make sure your programming adheres to the <a href="../COMS10008_Style.pdf" target="_blank">Unit Programming Style Guide</a>.
+Enjoy programming, our lab team and the forum are there for you if you need help!</p>
+
+<p>A mark out of 50 for the extra work will be awarded by swiftly reading the
+summary, checking whether your program matches what you claim, judging the
+sophistication and extent of what has been done, and checking whether the program follows
+the conventions and advice in the lectures.  In particular, writing tests as
+part of the program, in the same way as the skeletons, is very much recommended
+(though you only need enough tests to make <strong>you</strong> confident).
+Also recommended is working in very small steps, one test at a time, keeping
+your program in a working state. Again, make sure you do manage your time well and stop at a reasonable point. 
+Remember, there are significantly deminishing returns.</p>
+
+<p>The mark will aim to make your total for the assignment meet the university
+scale. So assuming you get full marks for the triangle program, for the open-ended task 10/50 means
+"this raises your total result from good to very good", 20/50 means "excellent, overall above and beyond what was expected", 
+30/50 means "truly exceptional work, potential mastery of the subject area" and 40/50 means
+"novel and publishable in a research journal".</p>
+
+<h2><u>Submit</u></h2>
+
+<p>Submit your work via <a href="https://www.ole.bris.ac.uk/webapps/blackboard/content/listContent.jsp?course_id=_237265_1&content_id=_3966875_1&mode=reset" target="_blank">Blackboard</a>. Submit at least an hour before the deadline to make sure there are no upload problems. 
+The university systems will automatically apply penalties of 10 percent points off per day that coursework is submitted late, even if only by one second.</p>
+<p><b>Closed Task:</b> Submit your program <code>triangle.c</code> as an attached file (not <code>Triangle.c</code> or
+any other name, unless you want to lose marks, and not the compiled
+program). Make sure your program compiles without warnings, runs, and doesn't
+still contain debugging print statements. All code you submit must be <strong><i>your own</i></strong>, do not copy any code parts from peers or other sources. 
+The programs we use for checking against the web and your peers are advanced. (Plagiarism may result in 0 marks for the coursework, the entire unit or worse.)</p>
+
+<p><b>Open-ended Task:</b> If you attempted the open-ended part, then also submit your extra program <code>visualise.c</code> and a <code>readme.txt</code> file
+with any comments you might want to make.</p>
+</body>
+</html>
